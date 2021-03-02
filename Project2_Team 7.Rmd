@@ -1,0 +1,131 @@
+---
+title: "Project 2 Description"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+***
+
+0. Before writing your analysis report, you may want to explore this data set and read about the coronavirus to generate the hypothesis or question to be answered in this report, i.e., the question(s) of interest. You can be creative on this question so long as it meets three conditions.
+
+    a. This question might be meaningful in real-world. 
+    b. A method discussed in this course is employed in solving this question. 
+    c. This question does not ask for causality.  
+
+***
+
+
+## Abstract
+
+Summarize analysis
+
+
+## Introduction
+
+Introduce the dataset and the questions of interest.
+
+# Background
+
+Review the background of the coronavirus.
+
+```{r echo=TRUE, eval=TRUE}
+library(tidyverse)
+covid <- read_csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
+covid
+```
+
+```{r}
+covid <- covid %>% 
+  filter(WHO_region != "Other") %>% 
+  mutate(WHO_region = fct_recode(WHO_region,"Eastern Mediterranean"="EMRO","Europe" = "EURO",
+          "Africa" = "AFRO","Western Pacific" = "WPRO","Americas"="AMRO","South-East Asia" = "SEARO"))
+
+range(covid$Date_reported)
+length(unique(covid$Country))
+test = covid %>% filter(WHO_region == "Eastern Mediterranean")
+test
+```
+
+
+
+## Descriptive Analysis
+
+Explore this dataset and generate summary statistics that you find informative, and explain your findings. <span style="color:red"> The summary statistics should include at least time, number of cases, number of death, case-mortality rate.</span>
+
+```{r}
+library(plotly)
+covid %>% 
+  filter(Date_reported>= "2021-01-01", Date_reported<= "2021-01-28") %>% 
+  group_by(Date_reported,WHO_region) %>%   summarize(deaths = sum(New_deaths),
+            cases = sum(New_cases)) %>% 
+  mutate(Days_2021 = Date_reported- as.Date("2021-01-01")) %>%
+  plot_ly(
+    x= ~cases,
+    y= ~deaths,
+    frame = ~Days_2021,
+    text=~WHO_region,
+    hoverinfo="WHO_region",
+    color=~WHO_region,
+    type = 'scatter',
+    mode = 'markers',
+    showlegend = T
+  )
+```
+
+```{r}
+library(tidyverse)
+library(maps)
+library(ggplot2)
+world <- map_data("world");
+worldplot <- ggplot() +
+  geom_polygon(data = world, aes(x=long, y = lat, group = group)) 
+worldplot
+
+covid.today<- covid %>% 
+  filter(Date_reported == "2021-1-28") %>% 
+  mutate(region=Country)
+
+
+
+covid.today.world<- inner_join(world, covid.today, by = "region")
+setdiff(unique(covid.today$Country),unique(world$region))
+
+fig.map  <- ggplot() +
+  geom_polygon(data = covid.today.world, aes(x=long, y = lat, group = group,fill=New_deaths)) + 
+  coord_fixed(1.3) 
+fig.map
+```
+
+```{r}
+fig.spaghetti.1 <- covid %>% 
+  filter(Date_reported>= "2020-3-15", Date_reported<= "2021-01-28", WHO_region=="Africa") %>% 
+  mutate(Date=as.Date(Date_reported)) %>%
+  ggplot(aes(x=Date,y=New_cases,by=Country)) +
+  geom_line(aes(color=Country)) +
+  theme(legend.position ='none')
+fig.spaghetti.1   
+```
+
+
+
+
+## Inferential Analysis 
+
+Propose an appropriate model to answer the questions of interest. 
+a. Explain your notations. 
+b. State assumptions for your model. 
+c. Explain why your model is appropriate for this task. 
+
+Fit the proposed model in (4) and explain your results.
+
+## Sensitivity Analysis
+
+Conduct model diagnostics
+
+## Discussion
+
+Conclude your analysis with a discussion of your findings and caveats of your approach.
+
+
+
+
