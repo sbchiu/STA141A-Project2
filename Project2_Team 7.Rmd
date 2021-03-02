@@ -28,23 +28,32 @@ Introduce the dataset and the questions of interest.
 
 Review the background of the coronavirus.
 
-```{r echo=TRUE, eval=TRUE}
+```{r include=F}
+library(dplyr)
+library(tibble)
 library(tidyverse)
-covid <- read_csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
-covid
+library(ggplot2)
+library(car)
+library(stringr)
+library(readr)
+knitr::opts_chunk$set(fig.pos = 'H')
+
 ```
 
-```{r}
-covid <- covid %>% 
-  filter(WHO_region != "Other") %>% 
-  mutate(WHO_region = fct_recode(WHO_region,"Eastern Mediterranean"="EMRO","Europe" = "EURO",
-          "Africa" = "AFRO","Western Pacific" = "WPRO","Americas"="AMRO","South-East Asia" = "SEARO"))
+```{r  echo=F}
+monthly_flights = read_csv("Monthly_Transportation_Statistics.csv") 
+new_data <- tidyr::separate(monthly_flights, Date, c("date", "time"), sep = " ")
+new_data
 
-range(covid$Date_reported)
-length(unique(covid$Country))
-test = covid %>% filter(WHO_region == "Eastern Mediterranean")
-test
+new_flight_data <- new_data[,c(1:3,7,9,45:47,92,98,100,129,133)]
+new_flight_data
+
+
+WHO_COVID_19_global_data <- read_csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
+us_covid_data <- filter(WHO_COVID_19_global_data, Country %in% "United States of America") 
+us_covid_data
 ```
+
 
 
 
