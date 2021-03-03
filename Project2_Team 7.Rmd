@@ -30,7 +30,7 @@ The WHO COVID-19 dataset used in the analysis contains daily updated counts of c
 The Monthly Transportation Statistics dataset compiles statistics of transportation from the Federal Government and transportation industry. The Bureau of Transportation Statistics has reported monthly data since January 1947 to date. The dataset contains monthly updated statistics with variables, such as highway fuel price of regular gasoline, number of people unemployed, and the domestic airline traffic, which is the primary variable of this data analysis.
 
 
-```{r include=F, echo=FALSE}
+```{r include = F, echo = FALSE}
 library(dplyr)
 library(tibble)
 library(tidyverse)
@@ -41,7 +41,7 @@ library(readr)
 knitr::opts_chunk$set(fig.pos = 'H')
 ```
 
-```{r, message=FALSE, results = FALSE, warning=FALSE}
+```{r, message = FALSE, results = FALSE, warning = FALSE}
 monthly_flights = read_csv("Monthly_Transportation_Statistics.csv") 
 new_data <- tidyr::separate(monthly_flights, Date, c("date", "time"), sep = " ")
 
@@ -51,7 +51,7 @@ WHO_COVID_19_global_data <- read_csv("https://covid19.who.int/WHO-COVID-19-globa
 us_covid_data <- filter(WHO_COVID_19_global_data, Country %in% "United States of America") 
 ```
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 library(plotly)
 us_covid_data %>% 
   filter(Date_reported>= "2020-03-01", Date_reported<= "2020-11-30") %>% 
@@ -71,7 +71,7 @@ us_covid_data %>%
   )
 ```
 
-```{r, echo=FALSE}
+```{r, echo = FALSE}
 fig2 <- us_covid_data %>% 
   filter(Date_reported>= "2020-03-01", Date_reported<= "2020-11-30") %>% 
   mutate(Date=as.Date(Date_reported)) %>%
