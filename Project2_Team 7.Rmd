@@ -15,11 +15,20 @@ Summarize analysis - to do after analysis
 
 ## Introduction
 
-Introduce the dataset and the questions of interest.
+The dataset from the World Health Organization (WHO) consists of daily reported counts of cases and deaths due to COVID-19. We also referenced the Monthly Transportation Statistics from the Bureau of Transportation Statistics for data on seasonally adjusted domestic airline traffic. In this data analysis, we are primarily interest in the following questions: what is the relationship between domestic U.S. airport traffic and COVID-19 cases and deaths. The data analysis will distinguish if airflight affects COVID-19 cases. This will indicate if increased travel contributes to a rise of cases and deaths, primarily to community transmission.
 
 # Background
 
 Review the background of the coronavirus.
+
+This data analysis utilizes the two following datasets: the WHO COVID-19 Dashboard and the Monthly Transportation Statistics. 
+
+The WHO has consistently collected data from around the world during the COVID-19 pandemic. The WHO dataset reports daily confirmed counts by countries, territories, and areas. Counts starting from December 31, 2019 to March 21, 2020 were taken from International Health Regulations (IHR) and thereafter, the confirmed counts are continuously compiled from global data on WHO dashboards of the headquarters and different regions. Daily counts may vary between countries, territories, and areas due to different sources, cut-off times, case detections, etc.
+
+The WHO COVID-19 dataset used in the analysis contains daily updated counts of cases and deaths with the following variables: the reporting date, country code, country, WHO region, new cases count, cumulative cases to date, new deaths count, and cumulative deaths to date.
+
+The Monthly Transportation Statistics dataset compiles statistics of transportation from the Federal Government and transportation industry. The Bureau of Transportation Statistics has reported monthly data since January 1947 to date. The dataset contains monthly updated statistics with variables, such as highway fuel price of regular gasoline, number of people unemployed, and the domestic airline traffic, which is the primary variable of this data analysis.
+
 
 ```{r include=F}
 library(dplyr)
@@ -47,7 +56,11 @@ us_covid_data <- filter(WHO_COVID_19_global_data, Country %in% "United States of
 us_covid_data
 ```
 
-
+```{r}
+install.packages("devtools")
+library(devtools)
+install_github("Ram-N/weatherData")
+```
 
 
 ## Descriptive Analysis
@@ -103,6 +116,10 @@ Conduct model diagnostics
 ## Discussion
 
 Conclude your analysis with a discussion of your findings and caveats of your approach.
+
+## References
+
+WHO coronavirus disease (COVID-19) dashboard. Geneva: World Health Organization, 2020. Available online: https://covid19.who.int/ 
 
 
 
