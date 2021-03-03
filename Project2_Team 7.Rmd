@@ -81,6 +81,25 @@ fig2 <- us_covid_data %>%
 fig2   
 ```
 
+```{r}
+fig3 <- us_covid_data %>% 
+  filter(Date_reported>= "2020-03-01", Date_reported<= "2020-11-30", WHO_region=="AMRO") %>% 
+  ggplot(aes(x=New_cases,y=New_deaths)) +
+  geom_point()+
+  geom_text(aes(label = " "), hjust=0, vjust=0)
+fig3
+```
+
+```{r}
+fig4 <- us_covid_data %>% 
+  filter(Date_reported>= "2020-03-01", Date_reported<= "2020-11-30", WHO_region=="AMRO") %>% 
+  ggplot(aes(x=Cumulative_cases,y=Cumulative_deaths)) +
+  geom_point()+
+  geom_text(aes(label=""),hjust=0, vjust=0)
+fig4
+```
+
+
 ## Descriptive Analysis
 
 Explore this dataset and generate summary statistics that you find informative, and explain your findings. <span style="color:red"> The summary statistics should include at least time, number of cases, number of death, case-mortality rate.</span>
