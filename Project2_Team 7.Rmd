@@ -80,7 +80,9 @@ fig2 <- us_covid_data %>%
   mutate(Date=as.Date(Date_reported)) %>%
   ggplot(aes(x=Date,y=New_cases,by=Country)) +
   geom_line(aes(color=Country)) +
-  theme(legend.position ='none')
+  theme(legend.position ='none') +
+  ggtitle("New Cases vs Date") +
+  xlab("Date") + ylab("New Cases")
 fig2   
 ```
 
@@ -89,7 +91,9 @@ fig3 <- us_covid_data %>%
   filter(Date_reported>= "2020-03-01", Date_reported<= "2020-11-30", WHO_region=="AMRO") %>% 
   ggplot(aes(x=New_cases,y=New_deaths)) +
   geom_point()+
-  geom_text(aes(label = " "), hjust=0, vjust=0)
+  geom_text(aes(label = " "), hjust=0, vjust=0) +
+  ggtitle("New Deaths vs New Cases") +
+  xlab("New Cases") + ylab("New Deaths")
 fig3
 ```
 
@@ -97,8 +101,10 @@ fig3
 fig4 <- us_covid_data %>% 
   filter(Date_reported>= "2020-03-01", Date_reported<= "2020-11-30", WHO_region=="AMRO") %>% 
   ggplot(aes(x=Cumulative_cases,y=Cumulative_deaths)) +
-  geom_point()+
-  geom_text(aes(label=""),hjust=0, vjust=0)
+  geom_point() +
+  geom_text(aes(label=""),hjust=0, vjust=0) +
+  ggtitle("Cumulative Deaths vs Cumulative Cases") +
+  xlab("Cumulative Cases") + ylab("Cumulative Deaths")
 fig4
 ```
 
