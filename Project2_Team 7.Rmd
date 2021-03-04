@@ -42,39 +42,39 @@ knitr::opts_chunk$set(fig.pos = 'H')
 ```
 
 ```{r, message = FALSE, results = FALSE, warning = FALSE}
-monthly_flights <- read_csv("Monthly_Transportation_Statistics.csv") 
-new_data <- tidyr::separate(monthly_flights, Date, c("date", "time"), sep = " ")
-
-new_flight_data <- new_data[,c(1:3,7,9,45:47,92,98,100,129,133)]
-
-names(new_flight_data)<-str_replace_all(names(new_flight_data), c(" " = "_"))
-
+tripsbydistance <- read_csv("Trips_by_Distance.csv") 
+names(tripsbydistance)<-str_replace_all(names(tripsbydistance), c(" " = "_"))
 
 WHO_COVID_19_global_data <- read_csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
-us_covid_data <- filter(WHO_COVID_19_global_data, Country %in% "United States of America") 
+us_covid_data <- filter(WHO_COVID_19_global_data, Country %in% "United States of America")
 
-casemortalityrate <- us_covid_data$New_deaths / us_covid_data$Cumulative_cases
+mergedata = merge(tripsbydistance ,us_covid_data, by.x = "Date", by.y = "Date_reported")
+newdata <- mergedata[-c(2:9, 20:21)]
+head(newdata)
+
+casemortalityrate <- newdata$New_deaths / newdata$Cumulative_cases
 ```
+
+Below is an interactive plot to show the changes in new cases and deaths across time, starting from when cases and deaths started to be reported. The delay of confirmed cases is attributed to the delay of action and discovery of the coronavirus. 
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 library(plotly)
-us_covid_data %>% 
-  filter(Date_reported>= "2020-03-01", Date_reported<= "2020-11-30") %>% 
-  group_by(Date_reported,WHO_region) %>%   summarize(deaths = sum(New_deaths),
+newdata %>% 
+  filter(Date>= "2020-03-01", Date<= "2020-11-30") %>% 
+  group_by(Date,WHO_region) %>%   summarize(deaths = sum(New_deaths),
             cases = sum(New_cases)) %>% 
-  mutate(Days_03.20_11.20 = Date_reported- as.Date("2020-03-01")) %>%
+  mutate(Date = Date- as.Date("2020-03-01")) %>%
   plot_ly(
     x= ~cases,
     y= ~deaths,
-    frame = ~Days_03.20_11.20,
-    text=~WHO_region,
-    hoverinfo="WHO_region",
-    color=~WHO_region,
+    frame = ~Date,
     type = 'scatter',
     mode = 'markers',
     showlegend = T
   )
 ```
+
+Another plot is included below to show the changes in new cases over time. This can reflect trends of society with seasons as well as policy changes. It is observed that there was a substantial increase during the summer months. This shows there was an increase community transmission due to society leaving their homes more often as well as the changes in policies to improve the economic environment with relaxing certain restrictions for businesses of the stay-at-home order. It is also observed that there was a very large increase during the holiday season, ranging from November to January. Families are more likely to have larger group sizes and more likely to travel to visit family and friends.
 
 ```{r, echo = FALSE}
 fig2 <- us_covid_data %>% 
@@ -88,6 +88,9 @@ fig2 <- us_covid_data %>%
 fig2   
 ```
 
+
+The plot below is of new deaths versus new cases. Here, we can observe that although when new cases start to rise, the number of new deaths stays the same. Rarely does it happen when there are lower new cases, but a spike in new deaths in those cases.
+
 ```{r}
 fig3 <- us_covid_data %>% 
   filter(Date_reported>= "2020-03-01", Date_reported<= "2020-11-30", WHO_region=="AMRO") %>% 
@@ -97,17 +100,6 @@ fig3 <- us_covid_data %>%
   ggtitle("New Deaths vs New Cases") +
   xlab("New Cases") + ylab("New Deaths")
 fig3
-```
-
-```{r}
-fig4 <- us_covid_data %>% 
-  filter(Date_reported>= "2020-03-01", Date_reported<= "2020-11-30", WHO_region=="AMRO") %>% 
-  ggplot(aes(x=Cumulative_cases,y=Cumulative_deaths)) +
-  geom_point() +
-  geom_text(aes(label=""),hjust=0, vjust=0) +
-  ggtitle("Cumulative Deaths vs Cumulative Cases") +
-  xlab("Cumulative Cases") + ylab("Cumulative Deaths")
-fig4
 ```
 
 
