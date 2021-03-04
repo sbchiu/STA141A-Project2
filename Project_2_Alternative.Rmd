@@ -27,12 +27,10 @@ WHO_COVID_19_global_data <- read_csv("https://covid19.who.int/WHO-COVID-19-globa
 us_covid_data <- filter(WHO_COVID_19_global_data, Country %in% "United States of America")
 
 mergedata = merge(tripsbydistance ,us_covid_data, by.x = "Date", by.y = "Date_reported")
-mergedata
 newdata <- mergedata[-c(2:9, 20:21, 23)]
 newdata
 
-
-casemortalityrate <- us_covid_data$New_deaths / us_covid_data$Cumulative_cases
+casemortalityrate <- newdata$New_deaths / newdata$Cumulative_cases
 ```
 
 
