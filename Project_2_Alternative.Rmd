@@ -1,0 +1,48 @@
+---
+title: "Project 2 Alternative"
+author: "Team 7"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+***
+
+
+```{r include = F, echo = FALSE}
+library(dplyr)
+library(tibble)
+library(tidyverse)
+library(ggplot2)
+library(car)
+library(stringr)
+library(readr)
+knitr::opts_chunk$set(fig.pos = 'H')
+```
+
+```{r, message = FALSE, results = FALSE, warning = FALSE}
+tripsbydistance <- read_csv("Trips_by_Distance.csv") 
+names(tripsbydistance)<-str_replace_all(names(tripsbydistance), c(" " = "_"))
+tripsbydistance
+
+WHO_COVID_19_global_data <- read_csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
+us_covid_data <- filter(WHO_COVID_19_global_data, Country %in% "United States of America") %>% 
+  filter(Date_reported>= "2020-03-01", Date_reported<= "2020-11-30")
+
+newdata = merge(tripsbydistance ,us_covid_data, by.x = "Date", by.y = "Date_reported")
+newdata
+
+casemortalityrate <- us_covid_data$New_deaths / us_covid_data$Cumulative_cases
+```
+
+
+```{r}
+anovamodel1 = aov(New_cases~
+`Number_of_Trips_<1`+ `Number_of_Trips_1-3` + `Number_of_Trips_3-5` + `Number_of_Trips_5-10` + `Number_of_Trips_10-25` + `Number_of_Trips_25-50`+ `Number_of_Trips_50-100` + `Number_of_Trips_100-250` + `Number_of_Trips_250-500` + `Number_of_Trips_>=500`, data=newdata)
+summary(anovamodel1)
+```
+
+## References
+
+WHO coronavirus disease (COVID-19) dashboard. Geneva: World Health Organization, 2020. Available online: https://covid19.who.int/ 
+
+Trips by Distance data
