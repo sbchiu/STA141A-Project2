@@ -15,19 +15,19 @@ Summarize analysis - to do after analysis
 
 ## Introduction
 
-The dataset from the World Health Organization (WHO) consists of daily reported counts of cases and deaths due to COVID-19. We also referenced the Monthly Transportation Statistics from the Bureau of Transportation Statistics for data on seasonally adjusted domestic airline traffic. In this data analysis, we are primarily interest in the following questions: what is the relationship between domestic U.S. airport traffic and COVID-19 cases and deaths. The data analysis will distinguish if airflight affects COVID-19 cases. This will indicate if increased travel contributes to a rise of cases and deaths, primarily to community transmission.
+The dataset from the World Health Organization (WHO) consists of daily reported counts of cases and deaths due to COVID-19. We also referenced the Trips by Distance dataset from the Bureau of Transportation Statistics for information on the number of trips taken by distance of the nation during the pandemic. In this data analysis, we are primarily interested in the following questions: if there are variations between different distances for trips taken outside of the home and what is the relationship between the different distances of trips and COVID-19 cases and deaths. The data analysis will distinguish if trip distances affect COVID-19 cases. This will indicate if increased travel contributes to a rise of cases and deaths, primarily due to community transmission.
 
 # Background
 
-Review the background of the coronavirus.
-
-This data analysis utilizes the two following datasets: the WHO COVID-19 Dashboard and the Monthly Transportation Statistics. 
+This data analysis utilizes the two following datasets: the WHO COVID-19 Dashboard and the Monthly Transportation Statistics.
 
 The WHO has consistently collected data from around the world during the COVID-19 pandemic. The WHO dataset reports daily confirmed counts by countries, territories, and areas. Counts starting from December 31, 2019 to March 21, 2020 were taken from International Health Regulations (IHR) and thereafter, the confirmed counts are continuously compiled from global data on WHO dashboards of the headquarters and different regions. Daily counts may vary between countries, territories, and areas due to different sources, cut-off times, case detections, etc.
 
 The WHO COVID-19 dataset used in the analysis contains daily updated counts of cases and deaths with the following variables: the reporting date, country code, country, WHO region, new cases count, cumulative cases to date, new deaths count, and cumulative deaths to date.
 
-The Monthly Transportation Statistics dataset compiles statistics of transportation from the Federal Government and transportation industry. The Bureau of Transportation Statistics has reported monthly data since January 1947 to date. The dataset contains monthly updated statistics with variables, such as highway fuel price of regular gasoline, number of people unemployed, and the domestic airline traffic, which is the primary variable of this data analysis.
+The Trips by Distance dataset compiles statistics of transportation, including the distance people travel when they are not quarantining during the COVID-19 pandemic and stay-at-home order. The Bureau of Transportation Statistics has reported data to date of mobility statistics. The data is gathered and merged from a mobile device data panel that takes distances traveled by people. The Bureau considers temporal frequency and spatial accuracy for locations as well as temporal coverage and representativeness for devices. All personal mobile data and locations have been excluded from sources for confidentiality. These trips include all types of transportation, including but not limited to airlines, transit, trains, and cars.
+
+The dataset contains daily updated statistics with variables, such as the national count of the population staying at home, the population not staying at home, and the count of trips of various distances from less than one mile to over 500 miles, which are the primary variables of this data analysis.
 
 
 ```{r include = F, echo = FALSE}
