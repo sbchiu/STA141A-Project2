@@ -22,14 +22,15 @@ knitr::opts_chunk$set(fig.pos = 'H')
 ```{r, message = FALSE, results = FALSE, warning = FALSE}
 tripsbydistance <- read_csv("Trips_by_Distance.csv") 
 names(tripsbydistance)<-str_replace_all(names(tripsbydistance), c(" " = "_"))
-tripsbydistance
 
 WHO_COVID_19_global_data <- read_csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
-us_covid_data <- filter(WHO_COVID_19_global_data, Country %in% "United States of America") %>% 
-  filter(Date_reported>= "2020-03-01", Date_reported<= "2020-11-30")
+us_covid_data <- filter(WHO_COVID_19_global_data, Country %in% "United States of America")
 
-newdata = merge(tripsbydistance ,us_covid_data, by.x = "Date", by.y = "Date_reported")
+mergedata = merge(tripsbydistance ,us_covid_data, by.x = "Date", by.y = "Date_reported")
+mergedata
+newdata <- mergedata[-c(2:9, 20:21, 23)]
 newdata
+
 
 casemortalityrate <- us_covid_data$New_deaths / us_covid_data$Cumulative_cases
 ```
