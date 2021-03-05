@@ -77,23 +77,17 @@ newdata %>%
 Another plot is included below to show the changes in new cases over time. This can reflect trends of society with seasons as well as policy changes. It is observed that there was a substantial increase during the summer months. This shows there was an increase community transmission due to society leaving their homes more often as well as the changes in policies to improve the economic environment with relaxing certain restrictions for businesses of the stay-at-home order. It is also observed that there was a very large increase during the holiday season, ranging from November to January. Families are more likely to have larger group sizes and more likely to travel to visit family and friends.
 
 ```{r, echo = FALSE}
-fig2 <- us_covid_data %>% 
-  filter(Date_reported>= "2020-03-01", Date_reported<= "2020-11-30") %>% 
-  mutate(Date=as.Date(Date_reported)) %>%
-  ggplot(aes(x=Date,y=New_cases,by=Country)) +
-  geom_line(aes(color=Country)) +
-  theme(legend.position ='none') +
-  ggtitle("New Cases vs Date") +
-  xlab("Date") + ylab("New Cases")
-fig2   
+fig2 <- plot_ly(newdata, x = ~Date, y = ~New_cases, name = 'trace 0', type = 'scatter', mode = 'lines') %>%   layout(title = "New Cases vs Date",
+         xaxis = list(title = "Date"),
+         yaxis = list (title = "New Cases"))
+fig2
 ```
 
+The plot below is of new deaths versus new cases. Here, we can observe that although when new cases start to rise, the number of new deaths mostly stays the same. Rarely does it happen when there are lower new cases and a spike in deaths in those cases.
 
-The plot below is of new deaths versus new cases. Here, we can observe that although when new cases start to rise, the number of new deaths stays the same. Rarely does it happen when there are lower new cases, but a spike in new deaths in those cases.
-
-```{r}
-fig3 <- us_covid_data %>% 
-  filter(Date_reported>= "2020-03-01", Date_reported<= "2020-11-30", WHO_region=="AMRO") %>% 
+```{r, echo = FALSE}
+fig3 <- newdata %>% 
+  filter(Date>= "2020-03-01", Date<= "2020-11-30", WHO_region=="AMRO") %>% 
   ggplot(aes(x=New_cases,y=New_deaths)) +
   geom_point()+
   geom_text(aes(label = " "), hjust=0, vjust=0) +
@@ -102,6 +96,56 @@ fig3 <- us_covid_data %>%
 fig3
 ```
 
+```{r, echo = FALSE}
+library(plotly)
+
+accumulate_by <- function(dat, var) {
+  var <- lazyeval::f_eval(var, dat)
+  lvls <- plotly:::getLevels(var)
+  dats <- lapply(seq_along(lvls), function(x) {
+    cbind(dat[var %in% lvls[seq(1, x)], ], frame = lvls[[x]])
+  })
+  dplyr::bind_rows(dats)
+}
+
+df <- newdata 
+fig <- df %>% accumulate_by(~Date)
+
+
+fig <- fig %>%
+  plot_ly(
+    x = ~Date, 
+    y = ~New_cases,
+    split = ~New_cases,
+    frame = ~frame, 
+    type = 'scatter',
+    mode = 'lines', 
+    line = list(simplyfy = F)
+  )
+fig <- fig %>% layout(
+  xaxis = list(
+    title = "Date",
+    zeroline = F
+  ),
+  yaxis = list(
+    title = "New cases",
+    zeroline = F
+  )
+) 
+fig <- fig %>% animation_opts(
+  frame = 100, 
+  transition = 0, 
+  redraw = FALSE
+)
+fig <- fig %>% animation_slider(
+  hide = T
+)
+fig <- fig %>% animation_button(
+  x = 1, xanchor = "right", y = 0, yanchor = "bottom"
+)
+
+fig
+```
 
 
 ## Descriptive Analysis
