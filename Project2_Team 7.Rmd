@@ -53,6 +53,7 @@ newdata <- mergedata[-c(2:9, 20:21)]
 head(newdata)
 
 casemortalityrate <- newdata$New_deaths / newdata$Cumulative_cases
+casemortalityrate
 ```
 
 Below is an interactive plot to show the changes in new cases and deaths across time, starting from when cases and deaths started to be reported. The delay of confirmed cases is attributed to the delay of action and discovery of the coronavirus. 
@@ -86,67 +87,37 @@ fig2
 The plot below is of new deaths versus new cases. Here, we can observe that although when new cases start to rise, the number of new deaths also starts to rise. The points seem to follow a linear, positive relationship.
 
 ```{r, echo = FALSE}
-fig3 <- plot_ly(newdata, x = ~New_cases, y = ~New_deaths, name = 'trace 0', type = 'scatter', mode = 'markers') %>%   layout(title = "New Deaths vs New Cases",
-         xaxis = list(title = "New Cases"),
-         yaxis = list (title = "New Deaths"))
+fig3 <- newdata %>% 
+  filter(Date>= "2020-03-01", Date<= "2020-11-30") %>% 
+  ggplot(aes(x=New_cases,y=New_deaths)) +
+  geom_point()+
+  geom_text(aes(label = " "), hjust=0, vjust=0) +
+  ggtitle("New Deaths vs New Cases") + 
+  geom_smooth(method='lm', formula= y~x) + 
+  xlab("New Cases") + ylab("New Deaths")
 fig3
 ```
 
 ```{r, echo = FALSE}
-library(plotly)
-
-accumulate_by <- function(dat, var) {
-  var <- lazyeval::f_eval(var, dat)
-  lvls <- plotly:::getLevels(var)
-  dats <- lapply(seq_along(lvls), function(x) {
-    cbind(dat[var %in% lvls[seq(1, x)], ], frame = lvls[[x]])
-  })
-  dplyr::bind_rows(dats)
-}
-
-df <- newdata 
-fig <- df %>% accumulate_by(~Date)
-
-
-fig <- fig %>%
-  plot_ly(
-    x = ~Date, 
-    y = ~New_cases,
-    split = ~New_cases,
-    frame = ~frame, 
-    type = 'scatter',
-    mode = 'lines', 
-    line = list(simplyfy = F)
-  )
-fig <- fig %>% layout(
-  xaxis = list(
-    title = "Date",
-    zeroline = F
-  ),
-  yaxis = list(
-    title = "New cases",
-    zeroline = F
-  )
-) 
-fig <- fig %>% animation_opts(
-  frame = 100, 
-  transition = 0, 
-  redraw = FALSE
-)
-fig <- fig %>% animation_slider(
-  hide = T
-)
-fig <- fig %>% animation_button(
-  x = 1, xanchor = "right", y = 0, yanchor = "bottom"
-)
-
-fig
+fig3 <- newdata %>% 
+  filter(Date>= "2020-03-01", Date<= "2020-11-30") %>% 
+  ggplot(aes(x=Date,y=casemortalityrate)) +
+  geom_point()+
+  geom_text(aes(label = " "), hjust=0, vjust=0) +
+  ggtitle("New Deaths vs New Cases") + 
+  geom_smooth(method='lm', formula= y~x) + 
+  xlab("New Cases") + ylab("New Deaths")
+fig3
 ```
 
 
 ## Descriptive Analysis
 
-Explore this dataset and generate summary statistics that you find informative, and explain your findings. <span style="color:red"> The summary statistics should include at least time, number of cases, number of death, case-mortality rate.</span>
+```{r}
+linear.model1 = lm(New_cases~
+`Number_of_Trips_<1`+ `Number_of_Trips_1-3` + `Number_of_Trips_3-5` + `Number_of_Trips_5-10` + `Number_of_Trips_10-25` + `Number_of_Trips_25-50`+ `Number_of_Trips_50-100` + `Number_of_Trips_100-250` + `Number_of_Trips_250-500` + `Number_of_Trips_>=500`, data=newdata)
+summary(linear.model1)
+```
 
 
 ## Inferential Analysis 
