@@ -83,16 +83,12 @@ fig2 <- plot_ly(newdata, x = ~Date, y = ~New_cases, name = 'trace 0', type = 'sc
 fig2
 ```
 
-The plot below is of new deaths versus new cases. Here, we can observe that although when new cases start to rise, the number of new deaths mostly stays the same. Rarely does it happen when there are lower new cases and a spike in deaths in those cases.
+The plot below is of new deaths versus new cases. Here, we can observe that although when new cases start to rise, the number of new deaths also starts to rise. The points seem to follow a linear, positive relationship.
 
 ```{r, echo = FALSE}
-fig3 <- newdata %>% 
-  filter(Date>= "2020-03-01", Date<= "2020-11-30", WHO_region=="AMRO") %>% 
-  ggplot(aes(x=New_cases,y=New_deaths)) +
-  geom_point()+
-  geom_text(aes(label = " "), hjust=0, vjust=0) +
-  ggtitle("New Deaths vs New Cases") +
-  xlab("New Cases") + ylab("New Deaths")
+fig3 <- plot_ly(newdata, x = ~New_cases, y = ~New_deaths, name = 'trace 0', type = 'scatter', mode = 'markers') %>%   layout(title = "New Deaths vs New Cases",
+         xaxis = list(title = "New Cases"),
+         yaxis = list (title = "New Deaths"))
 fig3
 ```
 
